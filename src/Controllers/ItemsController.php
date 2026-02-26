@@ -7,6 +7,7 @@ use UniSharp\LaravelFilemanager\Events\FileIsMoving;
 use UniSharp\LaravelFilemanager\Events\FileWasMoving;
 use UniSharp\LaravelFilemanager\Events\FolderIsMoving;
 use UniSharp\LaravelFilemanager\Events\FolderWasMoving;
+use UniSharp\LaravelFilemanager\Support\RequestPageResolver;
 
 class ItemsController extends LfmController
 {
@@ -22,7 +23,7 @@ class ItemsController extends LfmController
         $perPage = $this->helper->getPaginationPerPage();
         $items = array_merge($this->lfm->folders(), $this->lfm->files());
 
-        $keyword = request()->get('keyword', "");
+        $keyword = request()->input('keyword', '');
         if (!empty($keyword)) {
             $items = array_filter($items, function ($item) use ($keyword) {
                 return str_contains($item->name, $keyword);
@@ -105,9 +106,6 @@ class ItemsController extends LfmController
 
     private static function getCurrentPageFromRequest()
     {
-        $currentPage = (int) request()->get('page', 1);
-        $currentPage = $currentPage < 1 ? 1 : $currentPage;
-
-        return $currentPage;
+        return RequestPageResolver::resolve(request());
     }
 }

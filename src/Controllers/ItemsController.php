@@ -7,7 +7,6 @@ use UniSharp\LaravelFilemanager\Events\FileIsMoving;
 use UniSharp\LaravelFilemanager\Events\FileWasMoving;
 use UniSharp\LaravelFilemanager\Events\FolderIsMoving;
 use UniSharp\LaravelFilemanager\Events\FolderWasMoving;
-use UniSharp\LaravelFilemanager\Support\RequestPageResolver;
 
 class ItemsController extends LfmController
 {
@@ -106,6 +105,10 @@ class ItemsController extends LfmController
 
     private static function getCurrentPageFromRequest()
     {
-        return RequestPageResolver::resolve(request());
+        // Avoid deprecated Request::get() usage (Symfony 7.4+).
+        $currentPage = (int) request()->input('page', 1);
+        $currentPage = $currentPage < 1 ? 1 : $currentPage;
+
+        return $currentPage;
     }
 }

@@ -591,7 +591,7 @@ function download(items) {
   });
 }
 
-function open(item) {
+function openfolder(item) {
   goTo(item.url);
 }
 
